@@ -61,9 +61,16 @@ internal val Editor.isIdeaVimDisabledHere: Boolean
  * Also, we support IdeaVim in diff viewers.
  */
 private fun Editor.isNotFileEditorExceptAllowed(): Boolean {
-  if (EditorHelper.getVirtualFile(this)?.name?.contains("Dummy.txt") == true) return false
-  if (EditorHelper.isDiffEditor(this)) return false
-  return !EditorHelper.isFileEditor(this)
+  val docFullName = EditorHelper.getVirtualFile(this)?.name ?: return !EditorHelper.isFileEditor(this)
+  val parts = docFullName.split(".")
+  val (docName, docExtension) = parts.getOrNull(0) to parts.getOrNull(1)
+
+  return when {
+    listOf(docExtension, docName, docFullName).any { EditorHelper.allowedTextFieldEditors.contains(it) } -> false
+    docFullName.contains("Dummy.txt") -> false
+    EditorHelper.isDiffEditor(this) -> false
+    else -> !EditorHelper.isFileEditor(this)
+  }
 }
 
 private fun ideaVimDisabledInDialog(ideaVimSupportValue: StringListOptionValue): Boolean {
