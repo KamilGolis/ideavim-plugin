@@ -33,6 +33,7 @@ import java.awt.geom.Point2D;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import static com.maddyhome.idea.vim.api.VimInjectorKt.injector;
 import static java.lang.Integer.max;
@@ -42,6 +43,10 @@ import static java.lang.Integer.min;
  * This is a set of helper methods for working with editors. All line and column values are zero based.
  */
 public class EditorHelper {
+  // Put here all the editor types that we want to allow ideavim in text fields. This can be document extension or name or both.
+  // Current editors that work with ideavim are IlluminatedCloud2 Salesforce plugin editors.
+  public static final @NotNull Set<String> allowedTextFieldEditors = Set.of("apex", "soql", "sosl");
+
   // Set a max height on block inlays to be made visible at the top/bottom of a line when scrolling up/down. This
   // mitigates the visible area bouncing around too much and even pushing the cursor line off screen with large
   // multiline rendered doc comments, while still providing some visibility of the block inlay (e.g. Rider's single line
